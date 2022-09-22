@@ -44,10 +44,7 @@ const routes = [
   {
     path: '/review/:id',
     name: 'reviewDetail',
-    component: ReviewDetail,
-    props: route => ({
-      id: Number(route.params.id)
-    })
+    component: ReviewDetail
   }
 ]
 

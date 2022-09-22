@@ -28,4 +28,12 @@ router.get('/', function (req, res) {
   });
 });
 
+router.get('/:id', function (req, res) {
+  var id = parseInt(req.params.id, 10)
+  connection.query("SELECT * FROM review WHERE store_id = '" + id + "'", function (err, rows) {
+    if (err) throw err;
+    res.send(rows);
+  });
+});
+
 module.exports = router;
