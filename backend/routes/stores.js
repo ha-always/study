@@ -28,9 +28,17 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/:id', function (req, res) {
+router.get('/menu/:id', function (req, res) {
   var id = parseInt(req.params.id, 10)
   connection.query("SELECT * FROM menu WHERE store_id = '" + id + "'", function (err, rows) {
+    if (err) throw err;
+    res.send(rows);
+  });
+});
+
+router.get('/:id', function (req, res) {
+  var id = parseInt(req.params.id, 10)
+  connection.query("SELECT * FROM store WHERE store_id = '" + id + "'", function (err, rows) {
     if (err) throw err;
     res.send(rows);
   });

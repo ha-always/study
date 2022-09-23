@@ -1,13 +1,13 @@
 <template>
     <div class="reviewDetail">
-        <div>가게이름 추가할것</div>
+        <h2>🍽 {{store.storeName}} 🍽</h2>
         <div v-if="reviews.length == 0">
             아직 이 가게의 리뷰가 1도 없습니다.
         </div>
         <div v-for="(review, idx) in reviews" :key="idx">
           {{idx + 1}}. {{review.username}}의 평가 : {{review.content}} (
             <span v-for="idx in review.star" :key="idx">🧡</span>
-          )
+          )<button @click="delReview">이 리뷰 삭제.</button>
         </div>
         <div class="newReview">
             <hr>
@@ -24,8 +24,9 @@
                     <option :value="5">🧡🧡🧡🧡🧡</option>
                 </select>
             </label>
+            <div>이미지도 첨부할수 있도록.. 하기</div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
-            <button class="primary" @click="create">리뷰 올리기</button>
+            <button class="primary" @click="createReview">리뷰 올리기</button>
         </div>
         <div style="margin-top: 30px;">
             <router-link to="/store">BACK</router-link>
@@ -36,7 +37,7 @@
 <script>
 export default {
     methods: {
-        create: function (event) {
+        createReview: function (event) {
             var id = this.$route.params.id;
             this.form.storeid = id
             this.$http.post("/api/reviews/create", {
@@ -56,6 +57,7 @@ export default {
     data() {
         return {
           reviews: {},
+          store: {},
           form: {
             username: '',
             storeid: '',
@@ -69,6 +71,10 @@ export default {
         this.$http.get(`/api/reviews/${id}`)
             .then((res) => {
                 this.reviews = res.data
+            })
+        this.$http.get(`/api/stores/${id}`)
+            .then((res) => {
+                this.store = res.data[0]
             })
     }
 };

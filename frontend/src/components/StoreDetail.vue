@@ -18,7 +18,7 @@
     },
     created: function() {
       var id = this.$route.params.id;
-      this.$http.get(`/api/stores/${id}`)
+      this.$http.get(`/api/stores/menu/${id}`)
       .then((response) => {
         this.menus = response.data
       })
