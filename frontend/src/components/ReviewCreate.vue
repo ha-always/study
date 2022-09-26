@@ -1,17 +1,7 @@
 <template>
     <div class="reviewDetail">
-        <h2>🍽 {{store.storeName}} 🍽</h2>
-        <div v-if="reviews.length == 0">
-            아직 이 가게의 리뷰가 1도 없습니다.
-        </div>
-        <div v-for="(review, idx) in reviews" :key="idx">
-          {{idx + 1}}. {{review.username}}의 평가 : {{review.content}} (
-            <span v-for="idx in review.star" :key="idx">🧡</span>
-          )<button @click="delReview">이 리뷰 삭제.</button>
-        </div>
+        <h2>🍽 {{store.storeName}} 🍽 - 리뷰 작성</h2>
         <div class="newReview">
-            <hr>
-            <div class="title"><h3>이 가게의 새로운 리뷰를 아래에 작성하세요.</h3></div>
             <label>아이디
                 <input type="text" name="userid" v-model="form.username"/>
             </label>
@@ -24,7 +14,11 @@
                     <option :value="5">🧡🧡🧡🧡🧡</option>
                 </select>
             </label>
-            <div>이미지도 첨부할수 있도록.. 하기</div>
+            <div>
+                <label> 이미지 
+                    <input type="file"/>
+                </label>
+            </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="createReview">리뷰 올리기</button>
         </div>
@@ -52,6 +46,9 @@ export default {
                 .catch(function (error) {
                     alert("error");
                 });
+        },
+        delReview: function() {
+            console.log("clicked delReview")
         }
     },
     data() {

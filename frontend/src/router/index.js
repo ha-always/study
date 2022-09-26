@@ -4,9 +4,8 @@ import Index from '@/components/Main'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import StoreList from '@/components/StoreList'
-import Menu from '@/components/StoreDetail'
-import ReviewList from '@/components/ReviewList'
-import ReviewDetail from '@/components/ReviewDetail'
+import StoreDetail from '@/components/StoreDetail'
+import NewReview from '@/components/ReviewCreate'
 
 Vue.use(VueRouter)
 
@@ -33,19 +32,14 @@ const routes = [
   },
   {
     path: '/store/:id',
-    name: 'menu',
-    component: Menu
+    name: 'storeDetail',
+    component: StoreDetail
   },
   {
-    path: '/review',
-    name: 'review',
-    component: ReviewList
+    path: '/reviewCreate/:id',
+    name: 'reviewCreate',
+    component: NewReview
   },
-  {
-    path: '/review/:id',
-    name: 'reviewDetail',
-    component: ReviewDetail
-  }
 ]
 
 const router = new VueRouter({

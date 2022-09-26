@@ -1,14 +1,13 @@
 <template>
-    <div class="storeList">
-        <div v-for="(store, index) in stores" :key="index">
-            {{index + 1}}. {{ store.storeName }} ( {{store.address}} )
-            <router-link :to="`/store/${store.store_id}`">MENU</router-link> / 
-            <router-link :to="`/review/${store.store_id}`">REVIEW</router-link>
-        </div>
+  <div class="storeList">
+    <div v-for="(store, index) in stores" :key="index" style="margin-bottom: 10px;">
+      {{index + 1}}.
+      <router-link :to="`/store/${store.store_id}`" class="link">{{store.storeName}}</router-link>( {{store.address}} )
     </div>
+  </div>
 </template>
   
-  <script>
+<script>
     export default {
       data() {
         return {
@@ -23,6 +22,13 @@
     };
   </script>
   
-  <style>
-  
-  </style>
+<style>
+.link {
+  font-weight: bold;
+  color: #42b983;
+  margin: 0 5px;
+}
+.link:hover {
+  color: orange;
+}
+</style>
