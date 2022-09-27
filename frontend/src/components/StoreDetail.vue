@@ -12,7 +12,7 @@
             <span v-for="cnt in 5">
                 {{cnt < review.star ? '🧡' : '🤍'}}
             </span>
-          )<button @click="delReview">이 리뷰 삭제.</button>
+          )<button @click="modiReview(idx)">수정.</button><button @click="delReview">삭제.</button>
         </div>
         <router-link :to="`/reviewCreate/${$route.params.id}`"><button>새로운 리뷰 작성.</button></router-link>
         <div style="margin-top: 30px;">
@@ -22,10 +22,19 @@
 </template>
 
 <script>
+import router from '@/router';
+
 export default {
     methods: {
+        modiReview: function(idx){
+            var id = this.$route.params.id;
+            var num = this.reviews[idx].review_id;
+            console.log("clicked modiReview")
+            this.$router.push({name: 'reviewModify', params: {id, num}})
+        },
         delReview: function() {
             console.log("clicked delReview")
+            // 삭제를 .. 어케하지 .... 리뷰아이디를 가져와서 얘만 삭제해야되는데 ................... review.review_id
         }
     },
     data() {
@@ -42,10 +51,10 @@ export default {
                 this.store = res.data[0]
             })
         this.$http.get(`/api/stores/menu/${id}`)
-            .then((response) => {
-                this.menus = response.data
+            .then((res) => {
+                this.menus = res.data
             })
-        this.$http.get(`/api/reviews/${id}`)
+        this.$http.get(`/api/stores/review/${id}`)
             .then((res) => {
                 this.reviews = res.data
             })

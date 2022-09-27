@@ -21,19 +21,12 @@ connection.connect(function (err) {
   } 
 });
 
-router.get('/', function (req, res) {
-  connection.query("SELECT * FROM review", function (err, rows) {
-    if (err) throw err;
-    res.send(rows);
-  });
-});
-
-router.get('/:id', function (req, res) {
-  var id = parseInt(req.params.id, 10)
-  connection.query("SELECT * FROM review WHERE store_id = '" + id + "'", function (err, rows) {
-    if (err) throw err;
-    res.send(rows);
-  });
+router.get('/:num', function (req, res) {
+  var num = parseInt(req.params.num, 10)
+    connection.query("SELECT * FROM review WHERE review_id = '" + num + "'", function (err, rows) {
+      if (err) throw err;
+      res.send(rows);
+    })
 });
 
 router.post('/create', function (req, res) {

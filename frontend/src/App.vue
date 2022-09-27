@@ -13,7 +13,7 @@
 
 button {
     padding: 5px 20px;
-    margin: 15px;
+    margin: 5px;
     background: #fff;
     border: 1px solid;
 }
