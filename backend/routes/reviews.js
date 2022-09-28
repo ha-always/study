@@ -47,5 +47,23 @@ router.post('/create', function (req, res) {
   });
 });
 
+router.put('/update/:num', function (req, res) {
+  var num = parseInt(req.params.num, 10)
+  const review = {
+    'username': req.body.reviews.username,
+    'storeid': req.body.reviews.storeid,
+    'star': req.body.reviews.star,
+    'content': req.body.reviews.content,
+  };
+
+  connection.query("UPDATE review SET star = '"+ review.star  +"', content = '" + review.content + "' WHERE review_id = '" + num +"'", function (err, rows) {
+    if (err) throw err;
+    res.json({
+      success: true,
+      message: '수정되었습니다.'
+    })
+  });
+});
+
 
 module.exports = router;

@@ -33,14 +33,13 @@ export default {
     methods: {
         ModiReview: function (event) {
             var num = this.$route.params.num;
-            this.form.reviewid = num
-            this.$http.post("/api/reviews/create", {
-                form: this.form
+            this.$http.put(`/api/reviews/update/${num}`, {
+                reviews: this.reviews
             })
                 .then((res) => {
                     if (res.data.success == true) {
                         alert(res.data.message);
-                        this.$router.go();
+                        // this.$router.go();
                     }
                 })
                 .catch(function (error) {
@@ -55,13 +54,6 @@ export default {
         return {
           reviews: {},
           store: {},
-          form: {
-            reviewid: '',
-            username: '',
-            storeid: '',
-            star: '',
-            content: ''
-          }
         }
       },
     created: function () {
