@@ -40,7 +40,7 @@ export default {
                 .then((res) => {
                     if (res.data.success == true) {
                         alert(res.data.message);
-                        this.$router.go();
+                        this.$router.go(-1);
                     }
                 })
                 .catch(function (error) {

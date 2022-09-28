@@ -65,5 +65,17 @@ router.put('/update/:num', function (req, res) {
   });
 });
 
+router.delete('/delete/:num', function (req, res) {
+  var num = parseInt(req.params.num, 10)
+
+  connection.query("DELETE FROM review WHERE review_id = '" + num +"'", function (err, rows) {
+    if (err) throw err;
+    res.json({
+      success: true,
+      message: '삭제되었습니다.'
+    })
+  });
+
+})
 
 module.exports = router;

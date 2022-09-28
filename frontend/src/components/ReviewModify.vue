@@ -20,7 +20,8 @@
                 </label>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="reviews.content"></textarea>
-            <button class="primary" @click="ModiReview">리뷰 수정하기</button>
+            <button class="primary" @click="modiReview">리뷰 수정하기</button>
+            <button class="primary" @click="delReview">리뷰 삭제하기</button>
         </div>
         <div style="margin-top: 30px;">
             <router-link :to="`/store/${$route.params.id}`">BACK</router-link>
@@ -31,7 +32,7 @@
 <script>
 export default {
     methods: {
-        ModiReview: function (event) {
+        modiReview: function (event) {
             var num = this.$route.params.num;
             this.$http.put(`/api/reviews/update/${num}`, {
                 reviews: this.reviews
@@ -46,8 +47,22 @@ export default {
                     alert("error");
                 });
         },
-        delReview: function() {
-            console.log("clicked delReview")
+        delReview: function () {
+            var num = this.$route.params.num;
+            if (!confirm("정말 삭제하시나요?")) {
+                return
+            } else {
+                this.$http.delete(`/api/reviews/delete/${num}`,{})
+                    .then((res) => {
+                        if (res.data.success == true) {
+                            alert(res.data.message);
+                            this.$router.go(-1);
+                        }
+                    })
+                    .catch(function (error) {
+                        alert("error");
+                    });
+            }
         }
     },
     data() {
