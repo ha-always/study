@@ -53,4 +53,11 @@ const router = new VueRouter({
   routes
 })
 
+router.afterEach((to, from) => {
+  const title = to.meta.title === undefined ? '맛집리뷰' : to.meta.title;
+  Vue.nextTick(() => {
+    document.title = title;
+  });
+});
+
 export default router
