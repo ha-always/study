@@ -15,9 +15,13 @@
                 </select>
             </label>
             <div>
-                <label> 이미지 
-                    <input type="file"/>
+                <form>
+                <label><button @click="$refs.reviewImg.click()"> 이미지 선택</button> 
+                    <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*" multiple="multiple" style="display: none;">
                 </label>
+                <span>{{form.img.name}}</span>
+                <button @click="imgUpload" class="primary">이미지 올리기</button>
+                </form>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="createReview">리뷰 올리기</button>
@@ -29,11 +33,14 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     methods: {
         createReview: function (event) {
             var id = this.$route.params.id;
             this.form.storeid = id
+            console.log(this.form)
             this.$http.post("/api/reviews/create", {
                 form: this.form
             })
@@ -47,8 +54,20 @@ export default {
                     alert("error");
                 });
         },
-        delReview: function() {
-            console.log("clicked delReview")
+        imgChanged: function () {
+            console.log('img changed')
+            this.form.img = this.$refs.reviewImg.files[0]
+            console.log(this.form.img)
+        },
+        imgUpload: function (file) {
+            console.log('img upload...')
+
+            const formData = new FormData();
+            formData.append(file, file);
+            const url = "/api/reviews/imgUpload";
+            axios.post(url, formData).then(res => {
+                console.log(res);
+            })
         }
     },
     data() {
@@ -59,7 +78,8 @@ export default {
             username: '',
             storeid: '',
             star: '1',
-            content: ''
+            content: '',
+            img: ''
           }
         }
       },
