@@ -15,12 +15,12 @@
                 </select>
             </label>
             <div>
-                <form>
+                <form action="/api/reviews/imgUpload" method="post" enctype="multipart/form-data">
                 <label><button @click="$refs.reviewImg.click()"> 이미지 선택</button> 
                     <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*" multiple="multiple" style="display: none;">
                 </label>
                 <span>{{form.img.name}}</span>
-                <button @click="imgUpload" class="primary">이미지 올리기</button>
+                <button type="submit" class="primary">이미지 올리기</button>
                 </form>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
     methods: {
         createReview: function (event) {
@@ -59,16 +57,18 @@ export default {
             this.form.img = this.$refs.reviewImg.files[0]
             console.log(this.form.img)
         },
-        imgUpload: function (file) {
-            console.log('img upload...')
+        // imgUpload: function (file) {
+        //     console.log('img upload...')
 
-            const formData = new FormData();
-            formData.append(file, file);
-            const url = "/api/reviews/imgUpload";
-            axios.post(url, formData).then(res => {
-                console.log(res);
-            })
-        }
+        //     const formData = new FormData();
+        //     formData.append('file', file);
+        //     const url = "/api/reviews/imgUpload";
+        //     this.$http.post(url, formData,{
+        //         headers: {
+        //             "Content-Type": "multipart/form-data"
+        //         }, onUploadProgress 
+        //     });
+        // }
     },
     data() {
         return {

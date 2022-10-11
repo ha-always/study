@@ -2,15 +2,15 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
-const path = require("path")
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/img/");
+    cb(null, "public/img/review/");
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, path.basename(file.originalname, ext) + "_" + Date.now() + ext) // 파일명에 타임스탬프 추가
+    //console.log(req)
+    const fileName = Date.now() +  "_" + file.originalname // 이미지 파일명에 타임스탬프
+    cb(null, fileName)
   }
 })
 var upload = multer({ storage : storage});
@@ -94,17 +94,8 @@ router.delete('/delete/:num', function (req, res) {
 
 })
 
-router.post('/imgUpload', upload.single('image'), (req, res, next) => {
-  const img = `img/${req.file.filename}`;
 
-  connection.query("INSERT INTO images (url) values ('" + img + "')", function (err, rows) {
-    if (err) throw err;
-    res.json({
-      success: true,
-      message: '이미지 업로드 완료.'
-    })
-  });
-  
+router.post('/imgUpload', upload.single('image'), (req, res, next) => {
   console.log(req.file)
 })
 
