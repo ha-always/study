@@ -5,11 +5,11 @@ const fs = require('fs');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/img/review/");
+    cb(null, "public/img/");
   },
   filename: function (req, file, cb) {
     //console.log(req)
-    const fileName = Date.now() +  "_" + file.originalname // 이미지 파일명에 타임스탬프
+    const fileName = Date.now() +  "_" + Buffer.from(file.originalname, 'latin1').toString('utf8') // 이미지 파일명에 타임스탬프 추가 및 한글 안깨지게
     cb(null, fileName)
   }
 })
