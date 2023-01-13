@@ -3,10 +3,10 @@
         <h2>🍽 {{store.storeName}} 🍽 - 리뷰 수정</h2>
         <div class="newReview">
             <label>아이디
-                <input type="text" name="userid" v-model="reviews.username"/>
+                <input type="text" name="userid" v-model="form.username"/>
             </label>
             <label> 별점
-                <select v-model="reviews.star">
+                <select v-model="form.star">
                     <option :value="1">🧡🤍🤍🤍🤍</option>
                     <option :value="2">🧡🧡🤍🤍🤍</option>
                     <option :value="3">🧡🧡🧡🤍🤍</option>
@@ -14,12 +14,14 @@
                     <option :value="5">🧡🧡🧡🧡🧡</option>
                 </select>
             </label>
-            <div>
-                <label> 이미지 
-                    <input type="file"/>
+            <div class="uploadWrap">
+                <label><button @click="$refs.reviewImg.click()"> 이미지 선택</button>
+                    <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*"
+                        style="display: none;">
                 </label>
+                <span>{{ images.name }}</span>
             </div>
-            <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="reviews.content"></textarea>
+            <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
             <button class="primary" @click="delReview">리뷰 삭제하기</button>
         </div>
@@ -33,19 +35,28 @@
 export default {
     methods: {
         modiReview: function (event) {
+            let form = new FormData()
             var num = this.$route.params.num;
-            this.$http.put(`/api/reviews/update/${num}`, {
-                reviews: this.reviews
+            form.append('image', this.$refs.reviewImg.files[0])
+            form.append('star', this.form.star)
+            form.append('content', this.form.content)
+            for (let key of form.keys()) {
+                console.log(key, ":", form.get(key));
+            }
+            this.$http.post('/api/reviews/update' + num, form, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
                 .then((res) => {
                     if (res.data.success == true) {
                         alert(res.data.message);
-                        // this.$router.go();
+                        this.$router.go(-1);
                     }
                 })
-                .catch(function (error) {
-                    alert("error");
-                });
+                .catch(err => console.log(err))
+        },
+        imgChanged: function () {
+            this.images = this.$refs.reviewImg.files[0]
+            console.log(this.images)
         },
         delReview: function () {
             var num = this.$route.params.num;
@@ -67,16 +78,17 @@ export default {
     },
     data() {
         return {
-          reviews: {},
-          store: {},
+            store: {},
+            images: '',
+            form: {}
         }
-      },
+    },
     created: function () {
         var id = this.$route.params.id;
         var num = this.$route.params.num;
         this.$http.get(`/api/reviews/${num}`)
             .then((res) => {
-                this.reviews = res.data[0]
+                this.form = res.data[0]
             })
         this.$http.get(`/api/stores/${id}`)
             .then((res) => {

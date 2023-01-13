@@ -54,23 +54,18 @@ router.post('/create', upload.single('image'), (req, res, next) => {
   });
 })
 
-router.put('/update/:num', function (req, res) {
+router.post('/update:num', upload.single('image'), (req, res, next) => {
   var num = parseInt(req.params.num, 10)
-  const review = {
-    'username': req.body.reviews.username,
-    'storeid': req.body.reviews.storeid,
-    'star': req.body.reviews.star,
-    'content': req.body.reviews.content,
-  };
+  console.log(req.file.path)
 
-  connection.query("UPDATE review SET star = '"+ review.star  +"', content = '" + review.content + "' WHERE review_id = '" + num +"'", function (err, rows) {
+  connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.path + "' WHERE review_id = '" + num +"'", function (err, rows) {
     if (err) throw err;
     res.json({
       success: true,
       message: '수정되었습니다.'
     })
   });
-});
+})
 
 router.delete('/delete/:num', function (req, res) {
   var num = parseInt(req.params.num, 10)
