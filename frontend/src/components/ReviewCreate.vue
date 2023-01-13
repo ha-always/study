@@ -1,9 +1,9 @@
 <template>
     <div class="reviewDetail">
-        <h2>🍽 {{store.storeName}} 🍽 - 리뷰 작성</h2>
+        <h2>🍽 {{ store.storeName }} 🍽 - 리뷰 작성</h2>
         <div class="newReview">
             <label>아이디
-                <input type="text" name="userid" v-model="form.username"/>
+                <input type="text" name="userid" v-model="form.username" />
             </label>
             <label> 별점
                 <select v-model="form.star">
@@ -14,14 +14,12 @@
                     <option :value="5">🧡🧡🧡🧡🧡</option>
                 </select>
             </label>
-            <div>
-                <form action="/api/reviews/imgUpload" method="post" enctype="multipart/form-data">
-                <label><button @click="$refs.reviewImg.click()"> 이미지 선택</button> 
-                    <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*" multiple="multiple" style="display: none;">
+            <div class="uploadWrap">
+                <label><button @click="$refs.reviewImg.click()"> 이미지 선택</button>
+                    <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*"
+                        style="display: none;">
                 </label>
-                <span>{{form.img.name}}</span>
-                <button type="submit" class="primary">이미지 올리기</button>
-                </form>
+                <span>{{ images.name }}</span>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="createReview">리뷰 올리기</button>
@@ -33,14 +31,22 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     methods: {
-        createReview: function (event) {
-            var id = this.$route.params.id;
-            this.form.storeid = id
-            console.log(this.form)
-            this.$http.post("/api/reviews/create", {
-                form: this.form
+        createReview: function () {
+            let form = new FormData()
+            form.append('image', this.$refs.reviewImg.files[0])
+            form.append('storeid', this.$route.params.id)
+            form.append('username', this.form.username)
+            form.append('star', this.form.star)
+            form.append('content', this.form.content)
+            for (let key of form.keys()) {
+                console.log(key, ":", form.get(key));
+            }
+            this.$http.post('/api/reviews/create', form, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             })
                 .then((res) => {
                     if (res.data.success == true) {
@@ -48,41 +54,26 @@ export default {
                         this.$router.go(-1);
                     }
                 })
-                .catch(function (error) {
-                    alert("error");
-                });
+                .catch(err => console.log(err))
         },
         imgChanged: function () {
-            console.log('img changed')
-            this.form.img = this.$refs.reviewImg.files[0]
-            console.log(this.form.img)
+            this.images = this.$refs.reviewImg.files[0]
+            console.log(this.images)
         },
-        // imgUpload: function (file) {
-        //     console.log('img upload...')
-
-        //     const formData = new FormData();
-        //     formData.append('file', file);
-        //     const url = "/api/reviews/imgUpload";
-        //     this.$http.post(url, formData,{
-        //         headers: {
-        //             "Content-Type": "multipart/form-data"
-        //         }, onUploadProgress 
-        //     });
-        // }
     },
     data() {
         return {
-          reviews: {},
-          store: {},
-          form: {
-            username: '',
-            storeid: '',
-            star: '1',
-            content: '',
-            img: ''
-          }
+            reviews: {},
+            store: {},
+            images: '',
+            form: {
+                username: '',
+                storeid: '',
+                star: '1',
+                content: '',
+            }
         }
-      },
+    },
     created: function () {
         var id = this.$route.params.id;
         this.$http.get(`/api/reviews/${id}`)
