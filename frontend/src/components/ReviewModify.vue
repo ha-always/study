@@ -21,6 +21,9 @@
                 </label>
                 <span>{{ images.name }}</span>
             </div>
+            <div>
+                <img :src="form.img"/>
+            </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
             <button class="primary" @click="delReview">리뷰 삭제하기</button>
@@ -89,6 +92,7 @@ export default {
         this.$http.get(`/api/reviews/${num}`)
             .then((res) => {
                 this.form = res.data[0]
+                this.form.img = '/img/' + this.form.img
             })
         this.$http.get(`/api/stores/${id}`)
             .then((res) => {

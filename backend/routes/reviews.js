@@ -45,7 +45,7 @@ router.get('/:num', function (req, res) {
 router.post('/create', upload.single('image'), (req, res, next) => {
   console.log(req.file.path)
 
-  connection.query("INSERT INTO review (username, store_id, star, img, content) VALUES ('" + req.body.username + "', '"+ req.body.storeid +"', '"+ req.body.star  +"', '"+ req.file.path + "', '" + req.body.content + "')", function (err, rows) {
+  connection.query("INSERT INTO review (username, store_id, star, img, content) VALUES ('" + req.body.username + "', '"+ req.body.storeid +"', '"+ req.body.star  +"', '"+ req.file.filename + "', '" + req.body.content + "')", function (err, rows) {
     if (err) throw err;
     res.json({
       success: true,
@@ -58,7 +58,7 @@ router.post('/update:num', upload.single('image'), (req, res, next) => {
   var num = parseInt(req.params.num, 10)
   console.log(req.file.path)
 
-  connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.path + "' WHERE review_id = '" + num +"'", function (err, rows) {
+  connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.filename + "' WHERE review_id = '" + num +"'", function (err, rows) {
     if (err) throw err;
     res.json({
       success: true,
