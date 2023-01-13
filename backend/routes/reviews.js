@@ -42,26 +42,17 @@ router.get('/:num', function (req, res) {
     })
 });
 
-router.post('/create', function (req, res) {
-  var id = parseInt(req.params.id, 10)
-  const form = {
-    'username': req.body.form.username,
-    'storeid': req.body.form.storeid,
-    'star': req.body.form.star,
-    'content': req.body.form.content,
-    'img': req.body.form.img,
-  };
+router.post('/create', upload.single('image'), (req, res, next) => {
+  console.log(req.file.path)
 
-  console.log(req.file)
-
-  connection.query("INSERT INTO review (username, store_id, star, content) VALUES ('" + form.username + "', '"+ form.storeid +"', '"+ form.star  +"', '" + form.content + "')", function (err, rows) {
+  connection.query("INSERT INTO review (username, store_id, star, img, content) VALUES ('" + req.body.username + "', '"+ req.body.storeid +"', '"+ req.body.star  +"', '"+ req.file.path + "', '" + req.body.content + "')", function (err, rows) {
     if (err) throw err;
     res.json({
       success: true,
       message: '등록되었습니다.'
     })
   });
-});
+})
 
 router.put('/update/:num', function (req, res) {
   var num = parseInt(req.params.num, 10)
@@ -92,11 +83,6 @@ router.delete('/delete/:num', function (req, res) {
     })
   });
 
-})
-
-
-router.post('/imgUpload', upload.single('image'), (req, res, next) => {
-  console.log(req.file)
 })
 
 module.exports = router;
