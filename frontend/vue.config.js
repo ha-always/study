@@ -11,4 +11,5 @@ module.exports = {
     } 
   },
   outputDir: '../backend/public',  //② 배포 파일의 위치를 지정
+  lintOnSave: false,
 }

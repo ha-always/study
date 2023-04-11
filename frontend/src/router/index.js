@@ -7,6 +7,7 @@ import StoreList from '@/components/StoreList'
 import StoreDetail from '@/components/StoreDetail'
 import NewReview from '@/components/ReviewCreate'
 import ModiReview from '@/components/ReviewModify'
+import Review from '@/components/ReviewDetail'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/reviewModify/:id',
     name: 'reviewModify',
     component: ModiReview
+  },
+  {
+    path: '/review/:id',
+    name: 'reviewDetail',
+    component: Review
   },
 ]
 

@@ -29,6 +29,14 @@ button.primary {
     color: #fff;
 }
 
+.button {
+  cursor: pointer;
+}
+
+img {
+    width: 100%;
+}
+
 </style>
 
 <script>

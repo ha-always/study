@@ -1,9 +1,9 @@
 <template>
     <div class="reviewDetail">
-        <h2>🍽 {{store.storeName}} 🍽 - 리뷰 수정</h2>
+        <h2>🍽 {{ store.storeName }} 🍽 - 리뷰 수정</h2>
         <div class="newReview">
             <label>아이디
-                <input type="text" name="userid" v-model="form.username"/>
+                <input type="text" name="userid" v-model="form.username" />
             </label>
             <label> 별점
                 <select v-model="form.star">
@@ -21,8 +21,9 @@
                 </label>
                 <span>{{ images.name }}</span>
             </div>
-            <div>
-                <img :src="form.img"/>
+            <div class="imgWrap" v-if="form.img != null">
+                <img :src="form.img" />
+                <span @click="delImg" class="button">X</span>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
@@ -43,10 +44,11 @@ export default {
             form.append('image', this.$refs.reviewImg.files[0])
             form.append('star', this.form.star)
             form.append('content', this.form.content)
+            form.append('id', num)
             for (let key of form.keys()) {
                 console.log(key, ":", form.get(key));
             }
-            this.$http.post('/api/reviews/update' + num, form, {
+            this.$http.post('/api/reviews/update/:' + num, form, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
                 .then((res) => {
@@ -66,7 +68,7 @@ export default {
             if (!confirm("정말 삭제하시나요?")) {
                 return
             } else {
-                this.$http.delete(`/api/reviews/delete/${num}`,{})
+                this.$http.delete(`/api/reviews/delete/${num}`, {})
                     .then((res) => {
                         if (res.data.success == true) {
                             alert(res.data.message);
@@ -77,13 +79,28 @@ export default {
                         alert("error");
                     });
             }
+        },
+        delImg: function () {
+            console.log(this.form.img)
+            // this.$http.post('/delete/img', {
+            //     data: this.form.img
+            // })
+            //     .then((res) => {
+            //         if (res.data.success == true) {
+            //             alert(res.data.message);
+            //         }
+            //     })
+            //     .catch(function (error) {
+            //         alert("error");
+            //     });
         }
     },
     data() {
         return {
             store: {},
             images: '',
-            form: {}
+            form: {},
+            id: this.$route.params.id
         }
     },
     created: function () {
@@ -92,7 +109,7 @@ export default {
         this.$http.get(`/api/reviews/${num}`)
             .then((res) => {
                 this.form = res.data[0]
-                this.form.img = '/img/' + this.form.img
+                this.form.img = '/public/img/' + this.form.img
             })
         this.$http.get(`/api/stores/${id}`)
             .then((res) => {
@@ -114,4 +131,20 @@ textarea {
     height: 140px;
     margin: 0 auto;
 }
+
+.imgWrap {
+    display: flex;
+    justify-content: center;
+    max-width: 150px;
+    position: relative;
+}
+
+.imgWrap .button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    color: #fff;
+}
+
 </style>
