@@ -21,10 +21,6 @@
                 </label>
                 <span>{{ images.name }}</span>
             </div>
-            <div class="imgWrap" v-if="form.img != null">
-                <img :src="form.img" />
-                <span @click="delImg" class="button">X</span>
-            </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
             <button class="primary" @click="delReview">리뷰 삭제하기</button>

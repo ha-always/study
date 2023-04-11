@@ -2,22 +2,21 @@
     <div class="reviewDetail">
         <h2>🍽 {{store.storeName}} 🍽 - 리뷰 보기</h2>
         <div class="newReview">
-            <label>아이디
-                <input type="text" name="userid" v-model="reviews.username"/>
-            </label>
-            <label> 별점
-                <select v-model="reviews.star">
-                    <option :value="1">🧡🤍🤍🤍🤍</option>
-                    <option :value="2">🧡🧡🤍🤍🤍</option>
-                    <option :value="3">🧡🧡🧡🤍🤍</option>
-                    <option :value="4">🧡🧡🧡🧡🤍</option>
-                    <option :value="5">🧡🧡🧡🧡🧡</option>
-                </select>
-            </label>
-            <div>
-                <label> 이미지 
-                    <input type="file"/>
-                </label>
+            <div class="lineWrap">
+                <div>
+                    <label>아이디 : 
+                        {{this.reviews.username}}
+                    </label>
+                </div>
+                <div>
+                    <label> 별점 :
+                    <span v-for="cnt in this.reviews.star" :key="cnt">🧡</span>
+                    <span v-for="cnt in 5 - this.reviews.star" :key="cnt">🤍</span>
+                    </label>
+                </div>
+            </div>
+            <div class="imgWrap" v-if="this.reviews.img">
+                <img :src="this.reviews.img" />
             </div>
             <div class="reviewCont">{{reviews.content}}</div>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
@@ -67,6 +66,7 @@ export default {
         this.$http.get(`/api/reviews/${num}`)
             .then((res) => {
                 this.reviews = res.data[0]
+                this.reviews.img ? this.reviews.img = '/img/' + this.reviews.img : ''
             })
         this.$http.get(`/api/stores/${id}`)
             .then((res) => {
@@ -82,12 +82,13 @@ export default {
     margin: 10px auto;
 }
 
-textarea {
-    display: block;
-    width: 80%;
-    height: 140px;
-    margin: 0 auto;
+.lineWrap {
+    display: flex;
+    justify-content: center;
 }
+
+.lineWrap > div {min-width: 180px;}
+
 .reviewCont {
     border: 1px solid #ccc;
     padding: 20px;
