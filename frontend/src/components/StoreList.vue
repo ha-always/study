@@ -2,7 +2,7 @@
   <div class="storeList">
     <div v-for="(store, index) in stores" :key="index" style="margin-bottom: 10px;">
       {{index + 1}}.
-      <router-link :to="`/store/${store.store_id}`" class="link">{{store.storeName}}</router-link>( {{store.address}} )
+      <a href="javascript:;" @click="storeclick(store.store_id)" class="link">{{store.storeName}}</a>( {{store.address}} )
     </div>
   </div>
 </template>
@@ -12,6 +12,11 @@
       data() {
         return {
           stores: [],
+        }
+      },
+      methods: {
+        storeclick: function(stordId) {
+          this.$router.push({ name: "storeDetail", params:{ id : stordId}}) 
         }
       },
       created() {
