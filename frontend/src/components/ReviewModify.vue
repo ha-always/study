@@ -19,14 +19,14 @@
                     <input type="file" name="image" ref="reviewImg" @change="imgChanged" accept="image/*"
                         style="display: none;">
                 </label>
-                <span>{{ images.name }}</span>
+                <span>{{ images.name }}</span><a v-if="images.name" class="delBtn" href="javascript:;" @click="delImg">X</a>
             </div>
             <textarea style="margin-top:20px" placeholder="음식의 맛, 가격, 웨이팅 여부 등" v-model="form.content"></textarea>
             <button class="primary" @click="modiReview">리뷰 수정하기</button>
             <button class="primary" @click="delReview">리뷰 삭제하기</button>
         </div>
         <div style="margin-top: 30px;">
-            <router-link :to="`/store/${$route.params.id}`">BACK</router-link>
+            <a href="javascript:;" @click="goBack()">BACK</a>
         </div>
     </div>
 </template>
@@ -44,16 +44,19 @@ export default {
             for (let key of form.keys()) {
                 console.log(key, ":", form.get(key));
             }
-            this.$http.post('/api/reviews/update/:' + num, form, {
+            this.$http.post('/api/reviews/update:' + num, form, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
                 .then((res) => {
                     if (res.data.success == true) {
                         alert(res.data.message);
-                        this.$router.go(-1);
+                        this.goBack()
                     }
                 })
                 .catch(err => console.log(err))
+        },
+        goBack: function () {
+            this.$router.go(-1);
         },
         imgChanged: function () {
             this.images = this.$refs.reviewImg.files[0]
@@ -68,7 +71,7 @@ export default {
                     .then((res) => {
                         if (res.data.success == true) {
                             alert(res.data.message);
-                            this.$router.go(-1);
+                            this.goBack()
                         }
                     })
                     .catch(function (error) {
@@ -77,24 +80,24 @@ export default {
             }
         },
         delImg: function () {
-            console.log(this.form.img)
-            // this.$http.post('/delete/img', {
-            //     data: this.form.img
-            // })
-            //     .then((res) => {
-            //         if (res.data.success == true) {
-            //             alert(res.data.message);
-            //         }
-            //     })
-            //     .catch(function (error) {
-            //         alert("error");
-            //     });
+            var num = this.$route.params.num;
+            this.$http.post(`/api/reviews/delete/img/${num}`, {
+                data: this.form.img
+            })
+                .then((res) => {
+                    if (res.data.success == true) {
+                        alert(res.data.message);
+                    }
+                })
+                .catch(function (error) {
+                    alert("error");
+                });
         }
     },
     data() {
         return {
             store: {},
-            images: '',
+            images: {},
             form: {},
             id: this.$route.params.id
         }
@@ -105,7 +108,7 @@ export default {
         this.$http.get(`/api/reviews/${num}`)
             .then((res) => {
                 this.form = res.data[0]
-                this.form.img = '/public/img/' + this.form.img
+                this.images.name = this.form.img
             })
         this.$http.get(`/api/stores/${id}`)
             .then((res) => {
@@ -143,4 +146,10 @@ textarea {
     color: #fff;
 }
 
+.delBtn {
+    margin-left: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: red;
+}
 </style>

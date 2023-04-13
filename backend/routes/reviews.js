@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
+const path = require("path");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -14,6 +15,7 @@ var storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage : storage});
+
 
 //추가한 부분
 var mysql = require('mysql');
@@ -57,6 +59,7 @@ router.post('/create', upload.single('image'), (req, res, next) => {
 router.post('/update:num', upload.single('image'), (req, res, next) => {
   var num = parseInt(req.params.num, 10)
   console.log(req.file.path)
+  var num = req.body.id
 
   connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.filename + "' WHERE review_id = '" + num +"'", function (err, rows) {
     if (err) throw err;
@@ -79,5 +82,31 @@ router.delete('/delete/:num', function (req, res) {
   });
 
 })
+
+router.post('/delete/img/:num', function (req, res) {
+  var num = parseInt(req.params.num, 10)
+  // const directory = fs.existsSync("../public")
+  // console.log(directory)
+  fs.unlink('public/img/' + req.body.data, error => {
+    if (error?.code == 'ENOENT') {
+      console.log("파일 삭제 Error 발생");
+      res.json({
+        success: false,
+        message: '이미지 삭제 실패'
+      })
+      throw error;
+    } else {
+      connection.query("UPDATE review SET img = NULL WHERE review_id = '" + num + "'", function (err, rows) {
+        if (err) throw err;
+      })
+      res.json({
+        success: true,
+        message: '이미지가 삭제되었습니다.'
+      })
+    }
+  });
+
+})
+
 
 module.exports = router;
