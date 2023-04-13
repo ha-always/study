@@ -95,6 +95,8 @@ export default {
             })
                 .then((res) => {
                     if (res.data.success == true) {
+                        this.$refs.reviewImg.value = ''
+                        this.imgChanged()
                         alert(res.data.message);
                     }
                 })

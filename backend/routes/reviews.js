@@ -58,7 +58,7 @@ router.post('/create', upload.single('image'), (req, res, next) => {
 
 router.post('/update:num', upload.single('image'), (req, res, next) => {
   var num = req.body.id
-  console.log(num)
+  // console.log(num)
   if(req.image == undefined) {
     connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"' WHERE review_id = '" + num +"'", function (err, rows) {
       if (err) throw err;
