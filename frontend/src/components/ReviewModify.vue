@@ -37,7 +37,9 @@ export default {
         modiReview: function (event) {
             let form = new FormData()
             var num = this.$route.params.num;
-            form.append('image', this.$refs.reviewImg.files[0])
+            if(this.$refs.reviewImg.files[0]) {
+                form.append('image', this.$refs.reviewImg.files[0])
+            }
             form.append('star', this.form.star)
             form.append('content', this.form.content)
             form.append('id', num)
@@ -47,19 +49,23 @@ export default {
             this.$http.post('/api/reviews/update:' + num, form, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
-                .then((res) => {
-                    if (res.data.success == true) {
-                        alert(res.data.message);
-                        this.goBack()
-                    }
-                })
-                .catch(err => console.log(err))
+            .then((res) => {
+                if (res.data.success == true) {
+                    alert(res.data.message);
+                    this.goBack()
+                }
+            })
+            .catch(err => console.log(err))
         },
         goBack: function () {
             this.$router.go(-1);
         },
         imgChanged: function () {
-            this.images = this.$refs.reviewImg.files[0]
+            if(this.$refs.reviewImg.files[0]) {
+                this.images = this.$refs.reviewImg.files[0]
+            } else {
+                this.images = {}
+            }
             console.log(this.images)
         },
         delReview: function () {
@@ -81,6 +87,11 @@ export default {
         },
         delImg: function () {
             var num = this.$route.params.num;
+            if(!this.form.img) {
+                this.$refs.reviewImg.value = ''
+                this.imgChanged()
+                return
+            }
             this.$http.post(`/api/reviews/delete/img/${num}`, {
                 data: this.form.img
             })
