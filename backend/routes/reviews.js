@@ -57,17 +57,25 @@ router.post('/create', upload.single('image'), (req, res, next) => {
 })
 
 router.post('/update:num', upload.single('image'), (req, res, next) => {
-  var num = parseInt(req.params.num, 10)
-  console.log(req.file.path)
   var num = req.body.id
-
-  connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.filename + "' WHERE review_id = '" + num +"'", function (err, rows) {
-    if (err) throw err;
-    res.json({
-      success: true,
-      message: '수정되었습니다.'
-    })
-  });
+  console.log(num)
+  if(req.image == undefined) {
+    connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"' WHERE review_id = '" + num +"'", function (err, rows) {
+      if (err) throw err;
+      res.json({
+        success: true,
+        message: '수정되었습니다.'
+      })
+    });
+  } else {
+    connection.query("UPDATE review SET star = '"+ req.body.star  +"', content = '" + req.body.content +"', img = '" + req.file.filename + "' WHERE review_id = '" + num +"'", function (err, rows) {
+      if (err) throw err;
+      res.json({
+        success: true,
+        message: '수정되었습니다.'
+      })
+    });
+  }
 })
 
 router.delete('/delete/:num', function (req, res) {

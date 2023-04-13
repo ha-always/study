@@ -37,9 +37,7 @@ export default {
         modiReview: function (event) {
             let form = new FormData()
             var num = this.$route.params.num;
-            if(this.$refs.reviewImg.files[0]) {
-                form.append('image', this.$refs.reviewImg.files[0])
-            }
+            form.append('image', this.$refs.reviewImg.files[0])
             form.append('star', this.form.star)
             form.append('content', this.form.content)
             form.append('id', num)
