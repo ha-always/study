@@ -15,8 +15,17 @@
 </template>
 <script>
 export default {
- methods: {
+methods: {
     signUp: function (event) {
+      if (!this.user.userid) {
+          alert("아이디를 입력하세요.");
+          return
+      }
+      if (!this.user.userpw) {
+          alert("비밀번호를 입력하세요.");
+          return
+      }
+      console.log(this.user)
       this.$http.post("/api/users/signUp", {
           user: this.user,
         })

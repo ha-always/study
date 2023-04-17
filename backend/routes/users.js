@@ -32,25 +32,38 @@ router.post('/signUp', function (req, res) {
     'userid': req.body.user.userid,
     'userpw': req.body.user.userpw
   };
-  connection.query("SELECT userid FROM users WHERE userid = '" + user.userid + "'", function (err, row) {
-    if (row[0] == undefined){ //  동일한 아이디가 없을경우,
-      const salt = bcrypt.genSaltSync();
-      const encryptedPassword = bcrypt.hashSync(user.userpw, salt);
-      connection.query("INSERT INTO users (userid,userpw) VALUES ('" + user.userid + "','" + encryptedPassword + "')", user, function (err, row2) {
-        if (err) throw err;
-      });
-      res.json({
-        success: true,
-        message: '가입이 완료되었습니다.'
-      })
+  try {
+    if (!user.userid) {
+      throw new Error('아이디는 필수입니다.')
     }
-    else {
-      res.json({
-        success: false,
-        message: '동일한 아이디가 존재합니다.'
-      })
+    if (!user.userpw) {
+      throw new Error('비밀번호는 필수입니다.')
     }
-  });
+    connection.query("SELECT userid FROM users WHERE userid = '" + user.userid + "'", function (err, row) {
+      if (row[0] == undefined){ //  동일한 아이디가 없을경우,
+        const salt = bcrypt.genSaltSync();
+        const encryptedPassword = bcrypt.hashSync(user.userpw, salt);
+        connection.query("INSERT INTO users (userid,userpw) VALUES ('" + user.userid + "','" + encryptedPassword + "')", user, function (err, row2) {
+          if (err) throw err;
+        });
+        res.json({
+          success: true,
+          message: '가입이 완료되었습니다.'
+        })
+      }
+      else {
+        res.json({
+          success: false,
+          message: '동일한 아이디가 존재합니다.'
+        })
+      }
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      message: err.message || '오류가 발생했습니다.'
+    })
+  }
   
 });
 router.post('/login', function (req, res) {
