@@ -26,6 +26,12 @@ export default {
   },
   methods: {
     login: function (event) {
+      
+      if(sessionStorage.id || sessionStorage.pw) {
+        alert('이미 로그인 되어있습니다!');
+        this.$router.go(0)
+        return
+      }
       this.$http
         .post("/api/users/login", {
           user: this.user,
@@ -34,8 +40,8 @@ export default {
           (res) => {
             if(res.data.success) {    //로그인 성공
               alert(res.data.message);
-              window.sessionStorage.setItem("id", res.data.user.id)
-              window.sessionStorage.setItem("pw", res.data.user.pw)
+              sessionStorage.setItem("id", res.data.user.id)
+              sessionStorage.setItem("pw", res.data.user.pw)
               this.$router.push("/");
               this.$router.go(0)
             } else {    //로그인 실패

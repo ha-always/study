@@ -82,13 +82,6 @@ router.post('/login', function (req, res) {
     if (row[0] !== undefined && row[0].userid === user.userid) {
       bcrypt.compare(user.userpw, row[0].userpw, function (err, res2) {
         if (res2) {
-          if (req.session.user) {
-            // 세션에 유저가 존재한다면
-            res.json({ // 이미 로그인
-              success: false,
-              message: '이미 로그인 되어 있습니다.'
-            })
-          } else {
             req.session.user = {
               id: user.userid,
               pw: user.userpw,
@@ -99,7 +92,6 @@ router.post('/login', function (req, res) {
               message: '로그인이 완료되었습니다.',
               user: req.session.user
             })
-          }
         } else {
           res.json({ // 매칭되는 아이디는 있으나, 비밀번호가 틀린 경우
             success: false,
