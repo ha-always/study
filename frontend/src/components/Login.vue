@@ -37,6 +37,7 @@ export default {
               window.sessionStorage.setItem("id", res.data.user.id)
               window.sessionStorage.setItem("pw", res.data.user.pw)
               this.$router.push("/");
+              this.$router.go(0)
             } else {    //로그인 실패
               alert(res.data.message);
               return
