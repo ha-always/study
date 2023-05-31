@@ -4,14 +4,23 @@ var path = require('path');
 const history = require('connect-history-api-fallback');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var storesRouter = require('./routes/stores');
 var reviewsRouter = require('./routes/reviews');
 
+
 var app = express();
-//추가한 부분
+
+// session 설정
+app.use(session({
+  secret : 'Rs89I67YEA55cLMgi0t6oyr8568e6KtD',
+  resave: false,
+  saveUninitialized: true
+}));
+
 var mysql = require('mysql');
 // Connection 객체 생성 
 var connection = mysql.createConnection({
