@@ -71,12 +71,18 @@ router.post('/login', function (req, res) {
     'userid': req.body.user.userid,
     'userpw': req.body.user.userpw
   };
+  if (!user.userid || !user.userpw) {
+    res.json({
+      success: false,
+      message: '아이디와 비밀번호를 모두 입력해주세요.'
+    })
+  }
   connection.query("SELECT userid, userpw FROM users WHERE userid = '" + user.userid + "'", function (err, row) {
     console.log(row[0]);
-    if (err) {
+    if (row[0] == undefined)  {
       res.json({ // 매칭되는 아이디 없을 경우
         success: false,
-        message: '로그인 실패!'
+        message: '가입되지 않은 아이디입니다.'
       })
     }
     if (row[0] !== undefined && row[0].userid === user.userid) {

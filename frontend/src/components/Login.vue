@@ -26,7 +26,10 @@ export default {
   },
   methods: {
     login: function (event) {
-      
+      if(!this.user.userid || !this.user.userpw) {
+        alert('아이디와 비밀번호를 모두 입력해주세요.');
+        return
+      }
       if(sessionStorage.id || sessionStorage.pw) {
         alert('이미 로그인 되어있습니다!');
         this.$router.go(0)
